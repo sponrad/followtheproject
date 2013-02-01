@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>{% block title %}Follow the Project{% endblock title %}</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+    <!-- styles -->
+    <script type="text/javascript" src="{{ URLS.js }}jquery.min.js"></script>
+    {% block head %}{% endblock head %}
+    <link href="{{ URLS.css }}bootstrap.css" rel="stylesheet">
+    <link href="{{ URLS.css }}style.css" rel="stylesheet">
+    <link href="{{ URLS.css }}print.css" rel="stylesheet" type="text/css" media="print" />
+
+    <!-- fav and touch icons -->
+
+    <link rel="shortcut icon" href="_static/favicon.ico">
+<!--
+    <link rel="apple-touch-icon" href="http://twitter.github.com/bootstrap/examples/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="http://twitter.github.com/bootstrap/examples/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="http://twitter.github.com/bootstrap/examples/images/apple-touch-icon-114x114.png">
+    <link rel="stylesheet" type="text/css" media="screen" href="./Bootstrap, from Twitter 2_files/world.w3c.css">
+-->
+
+    <script type="text/javascript" src="{{ URLS.js }}bootstrap-dropdown.js"></script>
+
+  </head>
+
+  <body{% block bodytag %}{% endblock bodytag %}>
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+	  <a class="brand" href="{{ URLS.main }}">Follow the Project</a>
+	  {% if account.selected_project_title %}
+          <ul class="nav">
+            <li{% if selected == "overview" %} class="active"{% endif %}><a href="/project/{{ account.selected_project_id }}/overview">Overview</a></li>
+            <li{% if selected == "tasks" %} class="active"{% endif %}><a href="/project/{{ account.selected_project_id }}/tasks">Tasks</a></li>
+	    <li{% if selected == "files" %} class="active"{% endif %}><a href="/project/{{ account.selected_project_id }}/files">Files</a></li>
+	    <li{% if selected == "people" %} class="active"{% endif %}><a href="/project/{{ account.selected_project_id }}/people" %}>People</a></li>	    
+	    <!--<li{% if selected == "search" %} class="active"{% endif %}><a href="/project/{{ account.selected_project_id }}/search" %}>Search</a></li>-->
+
+          </ul>
+	  <form method="get" action="/project/{{ project.key.id }}/search">
+	    <input type="text" name="q" placeholder="Search" autocomplete="off" />
+	  </form>
+	  {% endif %}
+	  <div class="floatright" id="titlefloatright">
+	    <ul class="nav floatright">
+	      {% if user %}
+	      <li{% if selected == "account" %} class="active"{% endif %}><a href="{{ URLS.account }}">Account</a></li>
+	      <li><a href="{{ logout_url }}">Logout</a></li>
+	      {% else %}
+	      <li><a href="{{ login_url }}">Login</a></li>
+	      {% endif %}
+	    </ul>
+	  </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span16" id="headspace">
+      </div>
+    </div>
+
+    <div class="container" id="content">
+      <div id="containerwrapper">
+      {% block container %}
+      {% endblock container %}
+      </div> <!-- container wrapper -->
+      <footer id="footer">
+        <p><a href="{{ URLS.main }}">FollowtheProject.com</a> &copy 2012 Follow the Project<span class="pull-right"><a>Privacy</a> | <a>Terms and Conditions</a></span></p>
+      </footer>
+    </div> <!-- /container -->
+
+  </body>
+
+</html>

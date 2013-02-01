@@ -1,0 +1,138 @@
+body {
+    background: #CECECE;
+}
+
+div#content {
+    background: white;
+    padding: 0px 30px 30px 30px;
+    border-style: solid;
+    border-color: #555;
+    border-width: 0px 1px 1px 1px;
+}
+
+div#containerwrapper {
+    min-height: 550px;
+}
+
+div#headspace {
+    padding-top: 40px;
+}
+
+div#projectheader {
+    position: fixed;
+    background: white;
+    z-index: 1;
+}
+
+div#projectheaderspace {
+    padding-top: 70px;
+}
+
+td.focus {
+    background-color: #ABF;
+}
+
+*.floatright {
+    float: right;
+}
+
+section#titlewrapper {
+    text-align: center;
+}
+
+h2 {
+    padding: 15px 0px 15px 0px;
+}
+
+p {
+    font-size: 13px;
+    line-height: 18px;
+}
+
+form#ff, section#filters {
+    margin-bottom: 5px;
+}
+
+section#filters span {
+    text-transform: None;
+}
+
+#filters span a, #filters span a:visited {
+    margin: 0px 0px 0px 5px;
+    color: white;    
+}
+
+#filters span a:hover {
+    color: slategray;
+    pointer: cursor;
+}
+
+/*
+table td, table td form, table td form input{
+    margin: 0;
+    padding: 0;
+}*/
+
+table th a{
+    color: #404040;
+}
+
+div.sortdirection{
+    display: inline-block;
+    padding-left: 5px;
+} 
+
+#fixedwrapper {
+    position: fixed;
+    width: 940px;
+    z-index: 1000;
+    background-color: White;
+}
+
+form#filterform {
+    display: inline-block;
+}
+
+table.highlight tbody tr:hover{
+    background-color: #FFCE47;
+}
+
+table thead {
+    background-color: #F3F3F3;
+}
+
+#titlefloatright{
+    margin-right: -20px;
+}
+
+.tabs .active > a, .tabs .active > a:hover {
+    color: black;
+}
+
+
+td.tablecheckbox {
+    float: left;
+}
+
+td.tablecheck {
+    float: left;
+}
+
+form#fileform {
+}
+
+#fileactiondiv a {
+    display: block;
+} 
+
+#storagepercentouter {
+    width: 120px;
+    height: 20px;
+    padding: 1px;
+    border: solid 1px #999;
+}
+
+#storagepercentinner {
+    height: 20px;
+    background-color: blue;
+}

@@ -1,0 +1,172 @@
+{% extends "projectcontainer.html" %}
+
+{% block projecthead %}
+<script type="text/javascript">
+$(document).ready(function(){
+
+    $("#newff").hide();
+    $("#newpff").hide();
+    $("#uploadfileform").hide();
+
+    $("a#uploadbutton").click(function(e){
+        e.preventDefault();
+	$("#uploadfileform").toggle("fast");
+    });
+
+    $("a#newfolderbutton").click(function(e){
+        e.preventDefault();
+	$("#newff").toggle("fast");
+    });
+
+    $("a#newpicturefolderbutton").click(function(e){
+        e.preventDefault();
+	$("#newpff").toggle("fast");
+    });
+
+    $("tr").click(function(){
+	var checkbox = $(this).children().children("input");
+	checkbox.attr("checked", !checkbox.attr("checked"));
+    });
+
+    $(".tablecheckbox").click(function(e){
+        this.checked = !this.checked;
+    });
+
+    $("a#deletebutton").click(function(e){
+        e.preventDefault();
+	//confirm that it is all to be deleted
+	if (confirm("Delete all selected folders and files?")){
+
+	    //grab all the checked files and send them to the server
+	    //get an csv string of all of the folder and file TRs
+	    var rows = document.getElementsByClassName("datarow");
+	    var ids = "0";
+
+	    //load it up with their respective id's
+	    for (var i = 0; i < rows.length; i++) {
+		if ($(rows[i]).children("td:first").children("input").attr("checked") == true){
+		ids += ("," + $(rows[i]).attr('id'));
+	     }
+        }
+	
+        var f = $(".fileform");
+        f.attr('action', "/project/{{ project.key.id }}/files/delete");
+        $("#output").html("Deleting" + ids);
+        $('<input>').attr({
+           type: 'hidden',
+           name: 'fileids',
+           value: ids,
+        }).appendTo(f);
+        f.submit();
+	
+
+	}
+    });
+});
+
+function getID(element, index, array){
+    return element.getAttribute("id");
+}
+</script>
+{% endblock projecthead %}
+
+{% block projectcontainer %}
+<form style="display: none" class="fileform" method="post" action="/">
+  <input type="hidden" name="blank" value="none" />
+</form>
+
+<div class="row">
+  <div class="span16">
+    <ul class="breadcrumb">
+      <li><a href="/project/{{ project.key.id }}/files/root">Root</a><span class="divider">/</span></li>
+      {% for crumb in folder_breadcrumb %}
+      <li><a href="/project/{{ project.key.id }}/files/{{ crumb.key.id }}">{{ crumb.name }}</a><span class="divider">/</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+
+  <div class="span3" id="fileactiondiv"> 
+    <div class="well">
+      <a href="" id="uploadbutton" >Upload</a>
+      <a href="" id="downloadbutton">Download</a>
+      <a href="" id="movefiles" >Move</a>
+      <a href="" id="deletebutton">Delete</a>
+      <a href="">Share</a>
+      <a href="" id="newfolderbutton" >New Folder</a>
+      <a href="" id="newpicturefolderbutton" >New Picture Folder</a>
+    </div>
+
+    {% if storagepercent %}
+    <div class="well">
+      <p>Space Used - {{ storagepercent }}%</p>
+      <div id="storagepercentouter">
+	<div id="storagepercentinner" style="width: {{ storagepercent }}%">
+	</div>
+      </div>
+      <p>{{ project.owner.size|filesizeformat }} of {{ project.owner.size_available|filesizeformat }}</p>
+      <a href="">Get more space!</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="span13">
+
+    <div id="uploadfileform">
+      <form method="post" enctype="multipart/form-data" action="{{ upload_url }}">
+	<input type="submit" class="btn primary span3" value="Upload" />
+	<input type="hidden" name="action" value="upload" />
+	<input type="file" class="span10" name="uploadfile" id="uploadfile" />
+      </form>
+    </div>
+
+    <div id="newff">
+      <form method="post" action="/project/{{ project.key.id }}/newfolder">
+	<input type="submit" class="btn primary span3" value="New Folder" />
+	<input type="hidden" name="action" value="newfolder" />
+	<input type="text" class="span10" name="foldername" id="foldername" placeholder="Title of new folder"/>
+	</form>
+    </div>
+
+    <div id="newpff">
+      <form method="post" action="/project/{{ project.key.id }}/newfolder">
+	<input type="submit" class="btn primary span3" value="New Picture Folder" />
+	<input type="hidden" name="action" value="newfolder" />
+	<input type="text" class="span10" name="foldername" id="foldername" placeholder="Title of new picture folder"/>
+	</form>
+    </div>
+
+    <table id="filetable" class="highlight">
+      <thead>
+	<tr>
+	  <td></td>
+	  <td>Name</td>
+	  <td>Size</td>
+	  <td>Modified</td>
+	</tr>
+      </thead>
+      <tbody>
+	{% for folder in folders %}
+	<tr id="{{ folder.key.id }}" class="datarow">
+	  <td><input class="tablecheckbox" type="checkbox" /><img class="tableicon" src="{{ URLS.static }}folder.png" /></td>
+	  <td><a href="/project/{{ project.key.id }}/files/{{ folder.key.id }}">{{ folder.name }}</a></td>
+	  <td>{{ folder.size|filesizeformat }}</td>
+	  <td>{{ folder.date_edited }}</td>
+	</tr>
+	{% endfor %}
+	{% for file in files %}
+	<tr id="{{ file.key.id }}" class="datarow">
+	  <td><input class="tablecheckbox" type="checkbox" /><img class="tableicon" src="{{ URLS.static }}file.png" /></td>
+	  <td><a href="/serve/{{ file.key.id }}">{{ file.name }}</a></td>
+	  <td>{{ file.data.size|filesizeformat }}</td>
+	  <td>{{ file.date_edited }}</td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div id="output"></div>
+</div>
+{% endblock projectcontainer %}

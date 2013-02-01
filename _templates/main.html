@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+div.hero-unit {
+background: #DADAFF;
+}
+</style>
+{% endblock head %}
+
+{% block container %}
+<!-- Main hero unit for a primary marketing message or call to action -->
+<br>
+<div class="hero-unit">
+  <h1>Follow the Project</h1>
+  <p>Manage your projects and outreach on-line</p>
+  <p><a class="btn primary large" href="{% if user %}/account{% else %}{{ login_url }}{% endif %}">Access Your Account »</a></p>
+</div>
+
+<!-- Example row of columns -->
+<div class="row">
+  <div class="span6">
+    <h2>Real Project Management</h2>
+    <p>Follow the Project is a set of on-line collaboration tools designed for big-scale projects with large teams and agencies. Follow the Project is a compilation of project management tools that will empower you to command your projects and stay on top of your projects. Follow the Project is straightforward and fun to use.</p>
+  </div>
+  <div class="span5">
+    <h2>Management Tools</h2>
+    <p>Centralized Team Discussion</p>
+    <p>Outreach Tools</p>
+    <p>Controlled Project Transparency</p>
+    <p>Task and Action-Item Management</p>
+    <p>File Management and Sharing</p>
+    <p>Permissions and Access controls for Everyone</p>
+    <p><a class="btn" href="http://twitter.github.com/bootstrap/examples/hero.html#">View details »</a></p>
+  </div>
+  <div class="span5">
+    <h2>Current Status</h2>
+    <p>Follow the Project is in the middle stages of developemnt. Most tools are implemented and currently in preliminary internal testing. Please stick around and stay interested as an open beta testing period is planned to begin this Spring. Please follow our news releases via social media.</p>
+  </div>
+</div>
+{% endblock container %}

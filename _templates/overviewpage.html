@@ -1,0 +1,74 @@
+{% extends "projectcontainer.html" %}
+
+{% block projecthead %}
+<script src="{{ URLS.js }}bootstrap-tabs.js"></script>
+<script type="text/javascript">
+  $(document).ready( function(){
+  $('.tabs').tabs();
+  });
+</script>
+{% endblock projecthead %}
+
+{% block projectcontainer %}
+<div class="row">
+  <div class="span11">
+
+    <ul class="tabs" data-tabs="tabs" >
+      <li class="active"><a href="#discussion">Discussion</a></li>
+      <li><a href="#history">History</a></li>
+    </ul>
+
+    <div id="my-tab-content" class="tab-content">
+
+      <div class="active tab-pane" id="discussion">
+	{% block discussion %}
+	<form method="post" action="/project/{{ project.key.id }}/overview">
+	    <input type="hidden" name="action" value="newthread" />
+	    <input type="submit" class="btn primary" value="New Discussion"/>
+	    <input type="text" class="xlarge span8" name="threadname" placeholder="Title of new discussion"/>
+	</form>
+	<table class="condensed-table">
+	  <thead>
+	  </thead>
+	  <tbody>
+	    {% if threads.count > 0 %}
+	    {% for thread in threads %}
+	    <tr>
+	      <td><a href="{{ URLS.thread }}{{ thread.key.id }}">{{ thread.title }}</a></td>
+	      <td>{{ thread.account.display_name }}</td>
+	      <td>{{ thread.comment_set.count }} comment{% if thread.comment_set.count == 1 %}{% else %}s{% endif %} 0 unread {{ thread.date_edited|date:"m/d/y" }}</td>
+	    </tr>
+	    {% endfor %}
+	    {% else %}
+	    <tr>
+	      <td>Start some discussion!</td>
+	    </tr>
+	    {% endif %}
+	  </tbody>
+	</table>
+	{% endblock discussion %}
+      </div>
+
+      <div class="tab-pane" id="history">
+	Listing of changes made to the project. Can be commented on and made into a thread.
+      </div>
+
+    </div>
+
+  </div>
+  <div class="span5">
+    {% if project.status %}
+    <h4>Status</h4>
+    <p class="justify-text">{{ project.status }}</p>
+    {% endif %}
+    {% if project.description %}
+    <h4>Description</h4>
+    <p class="justify-text">{{ project.description }}</p>
+    {% endif %}
+    {% if project.date_start %}
+    <h4>Start Date</h4>
+    <p>{{ project.date_start }}</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock projectcontainer %}

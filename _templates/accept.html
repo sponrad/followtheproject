@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block head %}
+{% endblock head %}
+
+{% block container %}
+<!-- users accept invitations, transfer to their accounts -->
+{% if anotheraccount %}
+Add this project to your account ({{ anotheraccount.email }})?
+<form action="/" method="post">
+  <input type="submit" value="Confirm" />
+</form>
+{% endif %}
+{% endblock container %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script>
+$(document).ready( function(){
+$("a.removefilter").click( function(e){
+e.preventDefault();
+$.get("/removefilter/" + $(this).parent().attr("id"));
+$(this).parent().hide(0, function(){
+   $(this).remove();
+});
+});
+});
+</script>
+{% endblock head %}
+
+{% block container %}
+<div class="row">
+  <div class="span16">
+  <h2>Filters</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span4">
+    <section id="filters">
+    Project Activity Filters
+    {% if project.filter_set.count %}
+    {% for filter in filters %}
+    <p><span class="label success" id="{{ filter.key.id }}">FILTER {{ filter.filtertext }}<a class="removefilter" href="{{ URLS.removefilter }}{{ filter.key.id }}">X</a></span></p>
+    {% endfor %}
+    {% endif %}
+    </section>
+  </div>
+  <div class="span12">
+    <form method="post" action="/project/{{ project.key.id }}/filters">
+      <input type="hidden" name="action" value="newfilter" />
+      <input type="text" class="span5" size="30" name="filtertext" id="filtertext" placeholder="New Filter"/>
+      <input type="submit" class="btn primary" value="Save" />
+    </form>
+  </div>
+</div>
+
+{% endblock container %}

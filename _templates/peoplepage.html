@@ -1,0 +1,37 @@
+{% extends "projectcontainer.html" %}
+
+{% block projecthead %}
+{% endblock projecthead %}
+
+{% block projectcontainer %}
+{% if message %}
+<div class="alert-message success">
+{{ message }}
+</div>
+{% endif %}
+<h4><a href="/project/{{ project.key.id }}/invite">Invite Someone</a></h4>
+<h4>People</h4>
+{% for person in people %}
+<div class="row">
+  <div class="span3 offset1">
+    {{ person.account.display_name }}
+  </div>
+  <div class="span3">
+    {{ person.role }}
+  </div>
+  <div class="span3">
+    {{ person.account.email }}
+  </div>
+  <div class="span3">
+    {{ person.account.phone }}
+  </div>
+  <div class="span3">
+    <a href="">Edit</a>
+  </div>
+</div>
+{% endfor %}
+<h4>Public</h4>
+<p>Manage what "Public" sees</p>
+<p>By default, projects do not allow the public to see anything</p>
+<p>Public could just be a project account that is added at project creation, and which cannot be deleted.</p>
+{% endblock projectcontainer %}

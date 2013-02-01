@@ -1,0 +1,159 @@
+{% extends "projectcontainer.html" %}
+
+{% block projecthead %}
+<script src="{{ URLS.js}}jquery.tools.min.js"></script>
+<link href="{{ URLS.css }}jquerytoolsdateinput.css" rel="stylesheet">
+<script type="text/javascript">
+
+$(document).ready( function(){
+$(":date").dateinput({
+   format: 'mm/dd/yyyy'
+   });
+
+$("#commentform").submit( function(e){
+e.preventDefault();
+$.post(
+   "{{ URLS.ajaxactivitycomment }}{{ activity.key.id }}",
+   {commentinput: $("#commentinput").val(), activityid: "{{ activity.key.id}}"},
+   function(data){ $("#comments").html(data);}
+   );
+$("#commentinput").val('').focus();
+});
+
+$("#tagform").submit( function(e){
+e.preventDefault();
+$.post(
+  "{{ URLS.ajaxactivityaddtag }}{{ activity.key.id }}",
+   {tagtext: $("#tagtext").val(), activityid: "{{ activity.key.id}}"},
+   function(data){ $("#tags").html(data);}
+   );
+$("#tagtext").val('').focus();
+});
+
+$("a.onofflink").live('click', function(e){
+e.preventDefault();
+$.post(
+  "{{ URLS.ajaxactivitytoggle }}{{ activity.key.id }}",
+   {activityid: "{{ activity.key.id }}", tagid: $(this).attr("href")},
+   function(data){ $("#tags").html(data);}
+   );
+});
+
+$("a.removefilter").live('click', function(e){
+e.preventDefault();
+$.post(
+  "{{ URLS.ajaxactivitytagdelete }}{{ activity.key.id }}",
+   {activityid: "{{ activity.key.id }}", tagid: $(this).attr("href")},
+   function(data){ $("#tags").html(data);}
+   );
+});
+
+});
+</script>
+{% endblock projecthead %}
+
+
+{% block projectcontainer %}
+<!--<h2 class="center-text">Task Details</h2> -->
+
+<!--<a href="/project/{{ activity.project.key.id }}/tasks">Back</a>-->
+
+<div class="row">
+  <div class="span8">
+    <h4>Details</h4>
+    <form method="post" action="/task/{{ activity.key.id }}">
+      <fieldset>
+	<div class="clearfix">
+	  <label for="title">Title</label>
+	  <div class="input">
+	    <input class="xlarge" id="title" name="title" type="text" value="{{ activity.title }}"/>
+	  </div>
+	</div>
+
+	<div class="clearfix">
+	  <label for="date_start">Start Date</label>
+	  <div class="input">
+	    <input class="xlarge" id="date_start" name="date_start" type="date" value="{{ activity.date_start|date:"m/d/Y" }}"/>
+	  </div>
+	</div>
+
+	<div class="clearfix">
+	  <label for="date_due">Due Date</label>
+	  <div class="input">
+	    <input class="xlarge" id="date_due" name="date_due" type="date" value="{{ activity.date_due|date:"m/d/Y" }}"/>
+	  </div>
+	</div>
+
+	<div class="clearfix">
+	  <label for="date_end">Date Complete</label>
+	  <div class="input">
+	    <input class="xlarge" id="date_end" name="date_end" type="date" value="{{ activity.date_end|date:"m/d/Y" }}" />
+	  </div>
+	</div>
+
+	<div class="clearfix">
+	  <label for="responsible">Responsible</label>
+	  <div class="input">
+	    <input class="xlarge" id="responsible" name="responsible" type="text" value="{{ activity.responsible }}"/>
+	  </div>
+	</div>
+
+	<div class="clearfix">
+	  <label for="description">Description</label>
+	  <div class="input">
+	    <textarea class="xlarge" id="description" name="description" rows="6">{% if activity.description %}{{ activity.description }}{% endif %}</textarea>
+	  </div>
+	</div>
+
+	<div class="clearfix">
+	  <label for="complete">Complete</label>
+	  <div class="input">
+	    <input type="checkbox" name="complete" id="complete" {% if activity.complete %}checked="checked"{% endif %}>
+	  </div>
+	</div>
+
+	<div class="clearfix">
+	  <label for="delete">Delete?</label>
+	  <div class="input">
+	    <input type="checkbox" name="delete" id="delete">
+	  </div>
+	</div>
+
+	<div class="actions">
+	  <input type="submit" class="btn primary" value="Save"/>
+	  <a class="btn" href="/project/{{ activity.project.key.id }}/tasks">Back to Task List</a>
+	</div>
+      </fieldset>
+    </form>
+  </div>
+  <div class="span8">
+
+    <h4>Tags</h4>
+    <section id="filters">
+    <div id="tags">
+      {% for tag in tags %}
+      <span class="label {% if activity.key.id in tag.activities %}success{% endif %}"><a class="onofflink" id="onofflink" href="{{ tag.key.id }}">{{ tag.tagtext }}</a><a class="removefilter" title="Remove Tag" id="removefilter" href="{{ tag.key.id }}">X</a></span>
+      {% endfor %}
+    </div>
+    </section>
+
+    <form id="tagform" action="" method="post">
+      <input type="text" name="tagtext" id="tagtext" />
+      <input id="tagsubmit" type="submit"  value="Add Tag" />
+    </form>
+
+    <h4>Comments</h4>
+    <div id="comments">
+      {% for comment in activity.thread_set.0.comment_set %}
+      <p>{{ comment.content }}</p>
+      {% endfor %}
+    </div>
+
+    <form id="commentform" action="/taskcomment/{{ activity.key.id }}" method="post">
+      <textarea name="commentinput" id="commentinput"></textarea>
+      <input id="commentsubmit" type="submit"  value="Comment" />
+    </form>
+
+  </div>
+</div>
+{% endblock projectcontainer %}

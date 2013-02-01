@@ -1,0 +1,15 @@
+application: ftpbackend
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /_static
+  static_dir: _static
+
+- url: /account
+  script: ftpbackend.py
+  login: admin
+
+- url: .*
+  script: ftpbackend.py

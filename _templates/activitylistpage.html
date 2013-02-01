@@ -1,0 +1,108 @@
+{% extends "projectcontainer.html" %}
+
+{% block projecthead %}
+<script type="text/javascript" src="{{ URLS.js }}jquery.jeditable.mini.js"></script>
+<script type="text/javascript" charset="utf-8">
+ $(document).ready(function(){
+    $(".edit").editable("");
+ 
+/*    $("a.removefilter").click(function(e) {
+	e.preventDefault();
+	//Ajax request to delete the filter
+        $.get("/removefilter/" + $(this).parent().attr("id"));
+	$(this).parent().hide(0, function(){
+	    $(this).remove();
+	}); 
+    }); */
+
+{% if not account.showactivitypagefilterbar %}$("#filters").hide(); 
+{% else %}$("input#filtertext").focus();{% endif %}
+
+$("input#title").focus();
+
+$("a#fbn").click( function(e){
+ e.preventDefault();
+ $.get("/ajax/tfb");
+ $("#filters").toggle('fast');
+ $("#filtertext").focus();
+ });
+});
+</script>
+{% endblock projecthead %}
+
+{% block projectcontainer %}
+<div class="pull-right">
+  <form method="post" action="/project/{{ project.key.id }}/tasks">
+    <input type="hidden" name="action" value="newactivity" />
+    <input type="submit" class="btn primary" value="New Task" />
+    <input type="text" class="span5" size="30" name="title" id="title" placeholder="Name or Title of new task" autocomplete="off"/>
+  </form>
+</div>
+
+<section id="buttons">
+  <form method="post" action="/project/{{ project.key.id }}/tasks">
+    <input type="hidden" name="action" value="showhidecompleted" />
+    <input type="submit" class="btn" value="{% if account.show_completed %}Hide Completed{% else %}Show Completed{% endif %}" />
+    <a href="/project/{{ project.key.id }}/filters" class="btn" id="fbn" title="Show/Hide the Filter Settings">Filter</a>
+    <a href="/" class="btn">Export</a>
+    <a href="/" onclick="window.print(); return false;" class="btn">Print</a>
+  </form>
+
+</section>
+
+<section id="filters">
+  <blockquote class="pull-right span7">Add Tag filters to narrow down which tasks appear. Turn Tag filters on and off by clicking on them. New Tasks will inherit all active Tags.</blockquote>
+  <form method="post" id="ff" action="/project/{{ project.key.id }}/tasks">
+    <input type="hidden" name="action" value="newtag" />
+    <input type="submit" class="btn primary" value="Add Tag" />
+    <input type="text" class="span5" size="30" name="tagtext" id="tagtext" placeholder="New Tag"/>
+  </form>
+
+  {% if tags.count > 0 %}
+  Tags:
+  {% for tag in tags %}
+  <span class="label {% if tag.active %}success{% endif %}" id="{{ tag.key.id }}"><a class="filteronofflink" href="{{ URLS.toggletagfilter }}{{ tag.key.id }}">{{ tag.tagtext }}</a><a class="removefilter" title="Remove Tag" href="{{ URLS.removetag }}{{ tag.key.id }}">X</a></span>
+  {% endfor %}
+  {% else %}
+  No Tags
+  {% endif %}
+
+  {% for filter in filters %}
+  <span class="label {% if filter.active %}success{% endif %}" id="{{ filter.key.id }}"><a class="filteronofflink" href="/togglefilter/{{ filter.key.id }}">TAG {{ filter.filtertext }}</a><a class="removefilter" title="Remove Filter" href="{{ URLS.removefilter }}{{ filter.key.id }}">X</a></span>
+  {% endfor %}
+
+</section>
+
+<table class="highlight">
+  <thead>
+    <tr>
+      <th><a href="/project/{{ project.key.id }}/tasks?s={% if sortedby == "task"%}-{% endif %}task">Task<div class="sortdirection">{% if sortedby == "task" %}&darr;{% else %}{% if sortedby == "-task" %}&uarr;{% endif %}{% endif %}</div></a></th>
+      <th><a href="/project/{{ project.key.id }}/tasks?s={% if sortedby == "due" %}-{% endif %}due">Due Date<div class="sortdirection">{% if sortedby == "due" %}&darr;{% else %}{% if sortedby == "-due" %}&uarr;{% endif %}{% endif %}</div></a></th>
+      {% if account.show_completed %}<th><a href="/project/{{ project.key.id }}/tasks?s={% if sortedby == "complete" %}-{% endif %}complete">Date Complete<div class="sortdirection">{% if sortedby == "complete" %}&darr;{% else %}{% if sortedby == "-complete" %}&uarr;{% endif %}{% endif %}</div></a></th>{% endif %}
+      <th><a href="/project/{{ project.key.id }}/tasks?s={% if sortedby == "responsible" %}-{% endif %}responsible">Responsible<div class="sortdirection">{% if sortedby == "responsible" %}&darr;{% else %}{% if sortedby == "-responsible" %}&uarr;{% endif %}{% endif %}</div></a></th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if activities.length != 0 %}
+    {% for a in activities %}
+    <tr>
+      <td><a href="{{ URLS.task }}{{ a.key.id }}">{{ a.title }}</a></td>
+      <td>{% if a.date_due %}{{ a.date_due }}{% endif %}</td>
+      {% if account.show_completed %}<td>{% if a.date_end %}{{ a.date_end }}{% endif %}</td>{% endif %}
+      <td>{% if a.responsible %}{{ a.responsible }}{% endif %}</td>
+      <td>{% if a.description %}{{ a.description }}{% endif %}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+      <td>Add some activities to this project</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table>
+{% endblock projectcontainer %}

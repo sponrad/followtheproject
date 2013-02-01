@@ -1,0 +1,3 @@
+{% for tag in tags %}
+<span class="label {% if activity.key.id in tag.activities %}success{% endif %}"><a class="onofflink" id="onofflink" href="{{ tag.key.id }}">{{ tag.tagtext }}</a><a class="removefilter" title="Remove Tag" id="removefilter" href="{{ tag.key.id }}">X</a></span>
+{% endfor %}

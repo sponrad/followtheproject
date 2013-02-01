@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script src="{{ URLS.js}}jquery.tools.min.js"></script>
+<link href="{{ URLS.css }}jquerytoolsdateinput.css" rel="stylesheet">
+<script type="text/javascript">
+$(document).ready( function(){
+$(":date").dateinput({
+   format: 'mm/dd/yyyy'
+   });
+});
+</script>
+{% endblock head %}
+
+{% block container %}
+<div class="row">
+  <div class="span16">
+    <h2 class="center-text">{% if project %}Edit{% else %}New{% endif %} Project</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span4">
+    <p>Project details</p>
+    <p>If the user has the appropriate permission, also edit project settings here</p>
+  </div>
+
+  <div class="span12">
+    <form method="post" action="{% if project %}{{ URLS.editproject }}{{ project.key.id }}{% else %}{{ URLS.newproject }}{% endif %}">
+      <fieldset>
+	<input type="hidden" name="referer" value="{{ referer }}" />
+
+	<div class="clearfix">
+	  <label for="projectTitle">Project Title</label>
+	  <div class="input">
+	    <input class="xlarge" id="projectTitle" name="projectTitle" type="text" value="{{ project.title }}"/>
+	  </div>
+	</div>
+
+	<div class="clearfix">
+	  <label for="projectStatus">Status</label>
+	  <div class="input">
+	    <textarea class="xlarge" id="projectStatus" name="projectStatus" rows="6">{{ project.status }}</textarea>
+	  </div>
+	</div>
+
+	<div class="clearfix">
+	  <label for="date_start">Start Date</label>
+	  <div class="input">
+	    <input class="xlarge" id="date_start" name="date_start" type="date" value="{% if project.date_start %}{{ project.date_start|date:"m/d/Y" }}{% else %}{{ today|date:"m/d/Y" }}{% endif %}"/>
+	  </div>
+	</div>
+
+	<div class="clearfix">
+	  <label for="date_end">End Date</label>
+	  <div class="input">
+	    <input class="xlarge" id="date_end" name="date_end" type="date" value="{{ project.date_end|date:"m/d/Y" }}" />
+	  </div>
+	</div>
+
+	<div class="clearfix">
+	  <label for="projectDescription">Description</label>
+	  <div class="input">
+	    <textarea class="xlarge" id="projectDescription" name="projectDescription" rows="6">{{ project.description }}</textarea>
+	  </div>
+	</div>
+
+	<div class="actions">
+	  <input type="submit" class="btn primary" value="Save"/>
+	  <a href="{{ referer }}" class="btn">Cancel</a>
+	</div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+{% endblock container %}

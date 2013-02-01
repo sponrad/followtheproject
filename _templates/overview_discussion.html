@@ -1,0 +1,39 @@
+{% extends "overviewpage.html" %}
+
+{% block discussion %}
+<a class="" href="/project/{{ project.key.id }}/overview">Back to Discussion List</a>
+{% if thread.activity %}<a href="{{ URLS.task }}{{ thread.activity.key.id }}"><h3>{{ thread.title }}</h3></a>
+{% else %}
+<h3>{{ thread.title }}</h3>
+{% endif %}
+
+<table class="condensed-table">
+  <thead>
+  </thead>
+  <tbody>
+    {% if thread.comment_set.count > 0 %}
+    {% for comment in thread.comment_set|dictsort:"date_created" %}
+    <tr>
+      <td>{{ comment.account.display_name }}<div>{{ comment.date_created|date:"m/d/y" }}</div></td>
+      <td>{{ comment.content }}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+      <td>No Comments</td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table>
+
+<form method="post" action="{{ URLS.thread }}{{ thread.key.id }}" >
+  <textarea rows=2 class="xxlarge" name="commentinput" id="commentinput"></textarea>
+  <input type="submit" class="primary btn" value="Post" />
+</form>
+
+<script>
+$(document).ready( function(){
+$('#commentinput').focus();
+})
+</script>
+{% endblock discussion %}

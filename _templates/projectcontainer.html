@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+<script>
+$(document).ready( function(){
+
+$(document).scroll( function(){
+var scroll = $(document).scrollTop();
+$("#output").html(scroll);
+if (scroll == '0'){
+$("#output").html("top");
+$("#projectheader").css('background-color', 'white');
+}
+else {
+$("#projectheader").css('background-color', '#F5F5FD');
+}
+});
+
+});
+</script>
+
+{% block projecthead %}
+{% endblock projecthead %}
+{% endblock head %}
+
+
+
+{% block container %}
+<div class="row" id="projectheader">
+  <div class="span16">
+    <div id="output" style="position: absolute;"></div>
+    <a id="project-title" class="pull-right" href="{{ URLS.editproject }}{{ project.key.id }}">edit project</a>
+    <h2 class="center-text">{{ project.title }}</h2>
+  </div>
+</div>
+
+<div class="row container:after" id="projectheaderspace">
+  <div class="span16 container:after">
+  </div>
+</div>
+{% block projectcontainer %}
+{% endblock projectcontainer %}
+{% endblock container %}

@@ -1,0 +1,15 @@
+{% extends "projectcontainer.html" %}
+
+{% block projecthead %}
+{% endblock projecthead %}
+
+{% block projectcontainer %}
+<div class="row">
+<div class="span12 offset2">
+  <h3>Sorry, you can't do that.</h3>
+  <p><big>You do not have permission to <b>{{ requestedaction }}</b>.</big></p>
+  <p><big>Please contact {{ project.owner.display_name }} or another person in charge of {{ project.title }} if you would like this permission. They can make it happen on their People control panel.</big></p>
+  <a href="{{ referer }}" class="btn">Go Back</a>
+</div>
+</div>
+{% endblock projectcontainer %}
